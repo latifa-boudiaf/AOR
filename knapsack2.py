@@ -1,23 +1,17 @@
 def problem_0_1_knapsack(items, knapsack_capacity):
-  length = len(items)
-  table = [[0] * (knapsack_capacity + 1) for cell in range(length + 1)]
+  ratio_of_item = [(item[1] / item[0], item) for item in items]
+  ratio_of_item.sort(reverse=True)
+  value_in_knapsack = 0
+  capacity_left = knapsack_capacity
+  knapsack = []
   
-  for i in range(1, length + 1):
-    weight, value = items[i - 1]
-    for w in range(1, knapsack_capacity + 1):
-      if weight > w:
-        table[i][w] = table[i - 1][w]
-      else:
-        table[i][w] = max(table[i - 1][w], table[i - 1][w - weight] + value)
-
-    knapsack_chosen_items = []
-    chosen_items_weight = knapsack_capacity
-    for i in range(length, 0, -1):
-      if table[i][w] != table[i - 1][w]:
-         knapsack_chosen_items.append(items[i - 1])
-         chosen_items_weight -= items[i - 1][0]
-
-  return knapsack_chosen_items, table[length][knapsack_capacity]
+  for ratio, item in ratio_of_item:
+    if capacity_left >= item[0]:
+      knapsack.append(item)
+      value_in_knapsack += item[1]
+      capacity_left -= item[0]
+    
+  return knapsack, value_in_knapsack
   
 items = [
 [2, 40], # Item 1: weight = 2, value = 40 
